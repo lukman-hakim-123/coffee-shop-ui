@@ -35,7 +35,7 @@ class GetStarted extends StatelessWidget {
                   title: 'Coffee so good, your taste buds will love it.',
                   color: Colors.white,
                   fontSize: 34,
-                  weight: FontWeight.w700,
+                  fontWeight: FontWeight.w700,
                   textAlign: TextAlign.center,
                 )),
             const Positioned(

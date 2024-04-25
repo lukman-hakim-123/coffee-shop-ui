@@ -5,14 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 class CustomText extends StatelessWidget {
   final String title;
   final double? fontSize;
-  final FontWeight? weight;
+  final FontWeight? fontWeight;
   final Color? color;
   final TextAlign? textAlign;
   const CustomText({
     super.key,
     required this.title,
     this.fontSize,
-    this.weight,
+    this.fontWeight,
     this.color,
     this.textAlign,
   });
@@ -24,7 +24,7 @@ class CustomText extends StatelessWidget {
       style: GoogleFonts.sora(
           textStyle: TextStyle(
               fontSize: fontSize ?? 14,
-              fontWeight: weight ?? FontWeight.w400,
+              fontWeight: fontWeight ?? FontWeight.w400,
               color: color ?? Colors.black)),
       textAlign: textAlign ?? TextAlign.start,
     );

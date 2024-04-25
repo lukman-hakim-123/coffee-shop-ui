@@ -11,9 +11,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: GetStarted(),
+      theme: ThemeData(
+          textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: Colors.white,
+        selectionColor: Colors.blue,
+        selectionHandleColor: Colors.blue,
+      )),
+      home: const GetStarted(),
     );
   }
 }
