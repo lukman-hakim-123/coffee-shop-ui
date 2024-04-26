@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../constant/custom_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'categories.dart';
+import 'heading_home.dart';
+import 'product.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -9,162 +12,121 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final List<String> categories = [
+    'All',
+    'Cappuccino',
+    'Machiato',
+    'Latte',
+    'Americano'
+  ];
+
+  final List<Map<String, dynamic>> products = [
+    {
+      'image': 'assets/images/cap-chocolate.png',
+      'name': 'Cappucino',
+      'description': 'with Chocolate',
+      'star': '4.8',
+      'price': '\$ 4.53',
+    },
+    {
+      'image': 'assets/images/cap-oat-milk.png',
+      'name': 'Cappucino',
+      'description': 'with Oat Milk',
+      'star': '4.9',
+      'price': '\$ 3.90',
+    },
+    {
+      'image': 'assets/images/cap-choco.png',
+      'name': 'Cappucino',
+      'description': 'with Chocolate',
+      'star': '4.5',
+      'price': '\$ 4.53',
+    },
+    {
+      'image': 'assets/images/cap-milk.png',
+      'name': 'Cappucino',
+      'description': 'with Chocolate',
+      'star': '4.0',
+      'price': '\$ 3.90',
+    },
+  ];
+
+  final List<String> menuItems = [
+    'assets/icons/Home.svg',
+    'assets/icons/Heart.svg',
+    'assets/icons/Bag 2.svg',
+    'assets/icons/Notification.svg',
+  ];
+
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = TextEditingController();
     return Scaffold(
+      backgroundColor: const Color(0xFFE4EDFA),
       body: SafeArea(
-          child: Stack(
-        children: [
-          Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              child: Container(
-                height: 260,
-                width: double.infinity,
-                // color: Colors.black,
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [Color(0xFF131313), Color(0xFF313131)],
-                )),
-              )),
-          Positioned(
-              left: 20,
-              right: 20,
-              top: 35,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomText(
-                        title: 'Location',
-                        color: Color(0xFFB7B7B7),
-                        fontSize: 12,
-                      ),
-                      CustomText(
-                        title: 'Bilzen, Tanjungbalai',
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFFDDDDDD),
-                      )
-                    ],
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: Image.asset(
-                      "assets/images/pp.png",
-                      width: 44,
-                      height: 44,
-                    ),
-                  )
-                ],
-              )),
-          Positioned(
-            left: 20,
-            right: 20,
-            top: 100,
-            child: TextFormField(
-              controller: searchController,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                fillColor: const Color(0xFF313131),
-                filled: true,
-                prefixIcon: Image.asset('assets/images/search.png'),
-                label: const CustomText(
-                  title: 'Search coffee',
-                  color: Color(0xFF989898),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: Colors.grey),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: () {},
-                  icon: Container(
-                    width: 47,
-                    height: 47,
-                    decoration: BoxDecoration(
-                        color: const Color(0xFFC67C4E),
-                        borderRadius: BorderRadius.circular(12)),
-                    child: Image.asset('assets/images/furnitur-icon.png'),
-                  ),
-                ),
-              ),
+          child: CustomScrollView(
+        scrollDirection: Axis.vertical,
+        slivers: [
+          const SliverToBoxAdapter(
+            child: SizedBox(
+              height: 343,
+              child: HeaderHome(),
             ),
           ),
-          Positioned(
-              left: 20,
-              right: 20,
-              top: 190,
-              child: Stack(
-                children: [
-                  Container(
-                    height: 140,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.asset(
-                        'assets/images/image 8.png',
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                      left: 20,
-                      top: 12,
-                      child: Container(
-                        width: 60,
-                        height: 26,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                            color: Color(0xFFED5151),
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: const CustomText(
-                          title: 'Promo',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )),
-                  Positioned(
-                    left: 20,
-                    bottom: 53,
-                    child: Container(
-                      height: 27,
-                      width: 200,
-                      color: const Color(0xFF1C1C1C),
-                    ),
-                  ),
-                  Positioned(
-                    left: 20,
-                    bottom: 12,
-                    child: Container(
-                      height: 23,
-                      width: 200,
-                      color: const Color(0xFF1C1C1C),
-                    ),
-                  ),
-                  const Positioned(
-                      left: 20,
-                      top: 42,
-                      child: CustomText(
-                        title: 'Buy one get\none FREE',
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                      )),
-                ],
-              ))
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 37,
+              child: Categories(categories: categories),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 16),
+            sliver: Product(products: products),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
+          ),
         ],
       )),
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          elevation: 32,
+          type: BottomNavigationBarType.fixed,
+          items: List.generate(
+            menuItems.length,
+            (index) {
+              return BottomNavigationBarItem(
+                  activeIcon: Column(
+                    children: [
+                      SvgPicture.asset(
+                        menuItems[index],
+                        colorFilter: const ColorFilter.mode(
+                            Color(0xFFC67C4E), BlendMode.srcIn),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SvgPicture.asset('assets/icons/dotbottombar.svg')
+                    ],
+                  ),
+                  icon: SvgPicture.asset(
+                    menuItems[index],
+                  ),
+                  label: '');
+            },
+          ),
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
+      ),
     );
   }
 }
