@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../constant/custom_button.dart';
 import '../../constant/custom_text.dart';
@@ -13,7 +14,13 @@ class GetStarted extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(color: Colors.black),
+        decoration: const BoxDecoration(
+            color: Colors.black,
+            gradient: LinearGradient(
+                begin: Alignment(0.0, -1.0),
+                end: Alignment.bottomCenter,
+                colors: [Colors.black, Colors.black],
+                stops: [0.0, 0.24])),
         child: Stack(
           children: [
             Positioned(
@@ -21,7 +28,7 @@ class GetStarted extends StatelessWidget {
               right: 0,
               top: 0,
               child: SizedBox(
-                  height: 530,
+                  height: 510,
                   child: Image.asset(
                     "assets/images/bg.png",
                     fit: BoxFit.fill,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../constant/custom_text.dart';
 import '../detail/detail.dart';
+import '../order/order.dart';
 
 class Product extends StatelessWidget {
   const Product({
@@ -28,7 +29,7 @@ class Product extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => Detail()));
+                      builder: (BuildContext context) => const Detail()));
             },
             child: Container(
               decoration: const BoxDecoration(
@@ -106,7 +107,13 @@ class Product extends StatelessWidget {
                                 color: const Color(0xFF2F4B4E),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const Order()));
+                                },
                                 icon: Container(
                                     width: 28,
                                     height: 28,

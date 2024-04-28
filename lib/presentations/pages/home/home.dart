@@ -63,7 +63,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE4EDFA),
+      backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(
           child: CustomScrollView(
         scrollDirection: Axis.vertical,

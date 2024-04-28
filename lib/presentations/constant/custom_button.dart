@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 
 class CustomButton extends StatefulWidget {
   final String title;
+  final double? width;
   final void Function() onPressed;
-  const CustomButton({super.key, required this.title, required this.onPressed});
+  const CustomButton(
+      {super.key, required this.title, required this.onPressed, this.width});
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -15,7 +17,7 @@ class _CustomButtonState extends State<CustomButton> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      width: MediaQuery.of(context).size.width,
+      width: widget.width ?? MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(bottom: 10),
       child: ElevatedButton(
         onPressed: widget.onPressed,
@@ -28,6 +30,8 @@ class _CustomButtonState extends State<CustomButton> {
         child: CustomText(
           title: widget.title,
           color: Colors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: 16,
         ),
       ),
     );
