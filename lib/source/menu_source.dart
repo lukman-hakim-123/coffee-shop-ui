@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:appwrite/models.dart';
 import 'package:coffee_shop/core/appwrite.dart';
 import '../models/menu.dart';
@@ -8,6 +10,7 @@ class MenuSource {
       .setEndpoint(AppwriteConstants.endpoint)
       .setProject(AppwriteConstants.projectId);
   static Databases databases = Databases(client);
+  static Storage storages = Storage(client);
 
   static Future<List<Menu>> getMenus() async {
     try {
@@ -21,6 +24,19 @@ class MenuSource {
       }).toList();
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<Uint8List?> getImage(String imageId) async {
+    try {
+      final response = await storages.getFileView(
+        bucketId: AppwriteConstants.bucketId,
+        fileId: imageId,
+      );
+      return response;
+    } catch (e) {
+      print('Error fetching image: $e');
+      return null;
     }
   }
 }

@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/menu.dart';
+import '../../../provider/menu_provider.dart';
 import '../../constant/custom_text.dart';
 import '../detail/detail.dart';
 import '../order/order.dart';
 
-class Product extends StatelessWidget {
+class Product extends ConsumerWidget {
   const Product({
     super.key,
-    required this.products,
   });
 
-  final List<Map<String, dynamic>> products;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    MenuState state = ref.watch(menuNotifierProvider);
+    if (state.status == '') {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+    if (state.status == 'loading') {
+      return const SliverToBoxAdapter(
+          child: Center(child: CircularProgressIndicator()));
+    }
+    if (state.status == 'failed') {
+      return SliverToBoxAdapter(child: Center(child: Text(state.message)));
+    }
+    List<Menu> menus = state.data;
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -23,13 +35,22 @@ class Product extends StatelessWidget {
       ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          final product = products[index];
+          final menu = menus[index];
+          final imageData = state.imageData[menu.imageId];
+          if (imageData != null) {
+            print('Displaying image for ${menu.imageId}');
+          } else {
+            print('No image data to display for ${menu.imageId}');
+          }
           return InkWell(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => const Detail()));
+                      builder: (BuildContext context) => Detail(
+                            menu: menu,
+                            imageData: state.imageData[menu.imageId],
+                          )));
             },
             child: Container(
               decoration: const BoxDecoration(
@@ -43,10 +64,12 @@ class Product extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            product['image'],
-                            fit: BoxFit.cover,
-                          ),
+                          child: imageData != null
+                              ? Image.memory(
+                                  imageData,
+                                  fit: BoxFit.cover,
+                                )
+                              : const CircularProgressIndicator(),
                         ),
                         Positioned(
                             left: 0,
@@ -69,7 +92,7 @@ class Product extends StatelessWidget {
                                     size: 12,
                                   ),
                                   CustomText(
-                                    title: product['star'],
+                                    title: menu.rate.toString(),
                                     fontSize: 10,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w700,
@@ -88,12 +111,12 @@ class Product extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomText(
-                            title: product['name'],
+                            title: menu.title,
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                           ),
                           CustomText(
-                            title: product['description'],
+                            title: menu.subtitle,
                             fontSize: 12,
                             color: const Color(0xFF9B9B9B),
                           ),
@@ -101,7 +124,7 @@ class Product extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CustomText(
-                                title: product['price'],
+                                title: '\$${menu.price}',
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFF2F4B4E),
@@ -137,7 +160,7 @@ class Product extends StatelessWidget {
             ),
           );
         },
-        childCount: products.length,
+        childCount: menus.length,
       ),
     );
   }

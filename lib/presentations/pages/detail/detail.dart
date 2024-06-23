@@ -1,22 +1,52 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 
+import '../../../models/menu.dart';
 import '../../constant/custom_button.dart';
 import '../../constant/custom_text.dart';
 import '../order/order.dart';
 
-class Detail extends StatefulWidget {
-  const Detail({super.key});
+class Detail extends ConsumerStatefulWidget {
+  final Menu menu;
+  final Uint8List? imageData;
+  const Detail({super.key, required this.menu, this.imageData});
 
   @override
-  State<Detail> createState() => _DetailState();
+  ConsumerState<Detail> createState() => _DetailState();
 }
 
-class _DetailState extends State<Detail> {
+class _DetailState extends ConsumerState<Detail> {
   bool isLiked = false;
   int selectedSize = 2;
+  double price = 0;
+
+  @override
+  void initState() {
+    price = widget.menu.sizeM;
+    super.initState();
+  }
+
+  void _updatePrice(int size) {
+    setState(() {
+      selectedSize = size;
+      switch (size) {
+        case 1:
+          price = widget.menu.sizeS;
+          break;
+        case 2:
+          price = widget.menu.sizeM;
+          break;
+        case 3:
+          price = widget.menu.sizeL;
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +106,14 @@ class _DetailState extends State<Detail> {
                       ),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: Image.asset(
-                          'assets/images/detail-cap-coco.png',
-                          fit: BoxFit.fill,
-                        ),
+                        child: widget.imageData != null
+                            ? Image.memory(
+                                widget.imageData!,
+                                fit: BoxFit.fill,
+                                height: 250,
+                                width: double.infinity,
+                              )
+                            : const Icon(Icons.image_not_supported),
                       ),
                       const SizedBox(
                         height: 20,
@@ -87,43 +121,43 @@ class _DetailState extends State<Detail> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CustomText(
-                                title: 'Cappucino',
-                                color: Color(0xFF2F2D2C),
+                                title: widget.menu.title,
+                                color: const Color(0xFF2F2D2C),
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 4,
                               ),
                               CustomText(
-                                title: 'with Chocolate',
+                                title: widget.menu.subtitle,
                                 fontSize: 12,
-                                color: Color(0xFF9B9B9B),
+                                color: const Color(0xFF9B9B9B),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 16,
                               ),
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.star_rate_rounded,
                                     color: Color(0xFFFBBE21),
                                     opticalSize: 20,
                                   ),
                                   CustomText(
-                                    title: '4.8',
+                                    title: widget.menu.rate.toString(),
                                     fontSize: 16,
-                                    color: Color(0xFF2F2D2C),
+                                    color: const Color(0xFF2F2D2C),
                                     fontWeight: FontWeight.w700,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 4,
                                   ),
-                                  CustomText(
+                                  const CustomText(
                                     title: '(230)',
                                     fontSize: 12,
                                     color: Color(0xFF808080),
@@ -187,8 +221,7 @@ class _DetailState extends State<Detail> {
                       const SizedBox(
                         height: 10,
                       ),
-                      ReadMoreText(
-                          'A cappuccino is an approximately 150 ml (5 oz) beverage, with 25 ml of espresso coffee and 85 ml of fresh milk. The foamed milk is poured into the espresso, resulting in a creamy and frothy texture on top. Traditionally, cappuccinos are served in small ceramic cups and are often enjoyed as a breakfast drink or as a mid-morning pick-me-up. The balance of rich espresso, velvety milk, and airy foam makes cappuccino a beloved choice among coffee enthusiasts worldwide.',
+                      ReadMoreText(widget.menu.description,
                           trimMode: TrimMode.Line,
                           trimLines: 3,
                           colorClickableText: const Color(0xFFC67C4E),
@@ -225,89 +258,22 @@ class _DetailState extends State<Detail> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedSize = 1;
-                              });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 43,
-                              width: 96,
-                              decoration: BoxDecoration(
-                                  color: selectedSize == 1
-                                      ? const Color(0xFFFFF5EE)
-                                      : Colors.white,
-                                  border: Border.all(
-                                      color: selectedSize == 1
-                                          ? const Color(0xFFC67C4E)
-                                          : const Color(0xFFDEDEDE)),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(12))),
-                              child: CustomText(
-                                title: 'S',
-                                color: selectedSize == 1
-                                    ? const Color(0xFFC67C4E)
-                                    : const Color(0xFF2F2D2C),
-                              ),
-                            ),
+                          SizeButton(
+                            title: 'S',
+                            isSelected: selectedSize == 1,
+                            onTap: () => _updatePrice(1),
                           ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedSize = 2;
-                              });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 43,
-                              width: 96,
-                              decoration: BoxDecoration(
-                                  color: selectedSize == 2
-                                      ? const Color(0xFFFFF5EE)
-                                      : Colors.white,
-                                  border: Border.all(
-                                      color: selectedSize == 2
-                                          ? const Color(0xFFC67C4E)
-                                          : const Color(0xFFDEDEDE)),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(12))),
-                              child: CustomText(
-                                title: 'M',
-                                color: selectedSize == 2
-                                    ? const Color(0xFFC67C4E)
-                                    : const Color(0xFF2F2D2C),
-                              ),
-                            ),
+                          SizedBox(width: 8),
+                          SizeButton(
+                            title: 'M',
+                            isSelected: selectedSize == 2,
+                            onTap: () => _updatePrice(2),
                           ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedSize = 3;
-                              });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 43,
-                              width: 96,
-                              decoration: BoxDecoration(
-                                  color: selectedSize == 3
-                                      ? const Color(0xFFFFF5EE)
-                                      : Colors.white,
-                                  border: Border.all(
-                                      color: selectedSize == 3
-                                          ? const Color(0xFFC67C4E)
-                                          : const Color(0xFFDEDEDE)),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(12))),
-                              child: CustomText(
-                                title: 'L',
-                                color: selectedSize == 3
-                                    ? const Color(0xFFC67C4E)
-                                    : const Color(0xFF2F2D2C),
-                              ),
-                            ),
+                          SizedBox(width: 8),
+                          SizeButton(
+                            title: 'L',
+                            isSelected: selectedSize == 3,
+                            onTap: () => _updatePrice(3),
                           ),
                         ],
                       ),
@@ -338,18 +304,18 @@ class _DetailState extends State<Detail> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Column(
+                    Column(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
-                        CustomText(
+                        const CustomText(
                           title: 'Price',
                           color: Color(0xFF9B9B9B),
                         ),
                         CustomText(
-                          title: '\$ 4.53',
-                          color: Color(0xFFC67C4E),
+                          title: '\$ $price',
+                          color: const Color(0xFFC67C4E),
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                         )
@@ -370,6 +336,46 @@ class _DetailState extends State<Detail> {
                 ),
               ))
         ],
+      ),
+    );
+  }
+}
+
+class SizeButton extends StatelessWidget {
+  final String title;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const SizeButton({
+    super.key,
+    required this.title,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        alignment: Alignment.center,
+        height: 43,
+        width: 96,
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFFFF5EE) : Colors.white,
+          border: Border.all(
+            color:
+                isSelected ? const Color(0xFFC67C4E) : const Color(0xFFDEDEDE),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color:
+                isSelected ? const Color(0xFFC67C4E) : const Color(0xFF2F2D2C),
+          ),
+        ),
       ),
     );
   }

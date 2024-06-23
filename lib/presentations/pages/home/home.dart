@@ -1,54 +1,25 @@
+import 'package:coffee_shop/provider/menu_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'categories.dart';
 import 'heading_home.dart';
 import 'product.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Home extends StatefulWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  ConsumerState<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends ConsumerState<Home> {
   final List<String> categories = [
     'All',
     'Cappuccino',
     'Machiato',
     'Latte',
     'Americano'
-  ];
-
-  final List<Map<String, dynamic>> products = [
-    {
-      'image': 'assets/images/cap-chocolate.png',
-      'name': 'Cappucino',
-      'description': 'with Chocolate',
-      'star': '4.8',
-      'price': '\$ 4.53',
-    },
-    {
-      'image': 'assets/images/cap-oat-milk.png',
-      'name': 'Cappucino',
-      'description': 'with Oat Milk',
-      'star': '4.9',
-      'price': '\$ 3.90',
-    },
-    {
-      'image': 'assets/images/cap-choco.png',
-      'name': 'Cappucino',
-      'description': 'with Chocolate',
-      'star': '4.5',
-      'price': '\$ 4.53',
-    },
-    {
-      'image': 'assets/images/cap-milk.png',
-      'name': 'Cappucino',
-      'description': 'with Chocolate',
-      'star': '4.0',
-      'price': '\$ 3.90',
-    },
   ];
 
   final List<String> menuItems = [
@@ -59,6 +30,14 @@ class _HomeState extends State<Home> {
   ];
 
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(menuNotifierProvider.notifier).fetchMenu();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +59,9 @@ class _HomeState extends State<Home> {
               child: Categories(categories: categories),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 16),
-            sliver: Product(products: products),
+          const SliverPadding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 16),
+            sliver: Product(),
           ),
           SliverToBoxAdapter(
             child: SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
